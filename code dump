@@ -1,0 +1,62 @@
+/*   struct segmentdescriptor b = { 0, &b , MAXMEM/MAXSEGMENTS};
+  printf("\n b.allocated = %u, \n b.start = %p \n b.size = %lu \n", b.allocated, b.start, b.size);
+  struct segmentdescriptor c = { 0, &c , MAXMEM/MAXSEGMENTS};
+  struct segmentdescriptor d = { 0, &d , MAXMEM/MAXSEGMENTS}; */
+
+
+  /* void printsegmenttable()
+{
+  int i = 1;
+  int segnum = 10;
+  for (i; i<=10; i++)
+  {
+    printf("\nSegment %d - %d ]", i, segnum * i);
+    for (int i = 0; i<=10; i++) {
+      printf(" %u%u ",  *mymemory, *mymemory);
+    }
+    printf("\n");
+  }
+  printf("\n");
+} */
+
+
+
+
+ int memArray[MAXSEGMENTS][MAXMEM];
+  for (int i = 0; i < MAXSEGMENTS; i++)
+  {
+    for (int j = 0; j<MAXMEM/MAXSEGMENTS; j++)
+    {
+      memArray[i][j] = '\0';
+    }
+  }
+
+
+
+
+  /*   for (int i = 0; i < MAXSEGMENTS; i++)
+  {
+    printf("\n Segment %d ] ",i * 10);
+    for (int j = 0; j< MAXMEM/MAXSEGMENTS; j++)
+    {
+      printf("%02x ", memArray[i][j]);
+    }
+      printf("\n");
+  }
+   */
+
+
+
+
+   void printmemory (struct segmentdescriptor segment)
+{
+  char alloString [10];
+  if( segment.allocated == 0)
+  {
+    strcpy(alloString,"False");
+  }
+  else
+  {
+  strcpy(alloString,"True");
+  }
+  printf("\n Segment 0 \n  allocated = %s \n  start = %p \n  size = %lu \n", alloString , segment.start, segment.size);
