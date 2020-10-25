@@ -60,3 +60,8 @@
   strcpy(alloString,"True");
   }
   printf("\n Segment 0 \n  allocated = %s \n  start = %p \n  size = %lu \n", alloString , segment.start, segment.size);
+
+
+  printf ( "mymalloc> start\n");
+   printf ("plain size %lu\n size of %lu\n", size, sizeof(size));
+   printf ("plain mymemory %u\n size of %lu\n", *mymemory, sizeof(mymemory));

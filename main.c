@@ -6,11 +6,24 @@ int main()
 {
   printf ( "shell> start\n");
   initialize() ;
-  printsegmenttable();
-  printmemory() ;
+  //printsegmenttable();
+  //printmemory() ;
 
 //printsegmentdescriptor();
+  char * ptr1 = (char *) mymalloc (10) ;
+  strcpy (ptr1, "this test");
+  printf( "\nshell> content of allocated memory: %s\n", ptr1 ) ;
+  printf("%p\n", &mymemory);
+  int x = myfree(mymemory);
+  printf("my free = %d", x);
 
-  printf ( "shell> end\n");
+  /* char * ptr2 = (char *) mymalloc (15) ;
+  strcpy (ptr2, "this test");
+  printf( "\nshell> content of allocated memory: %s\n", ptr2 ) ; */
+
+  //printmemory() ;
+  //printsegmenttable();
+
+  printf ( "\nshell> end\n");
   return 0;
 }
