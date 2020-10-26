@@ -37,7 +37,7 @@ extern Segment_t * segmenttable;
 // forward references, user interface
 void        initialize () ;
 void      * mymalloc   ( size_t  ) ;
-int        myfree     ( void *  ) ;
+void        myfree     ( Segment_t *  ) ;
 void        mydefrag   ( void ** ) ;
 
 // forward references, managing segmentation table
@@ -49,6 +49,8 @@ int isPrintable ( int c ) ;
 void printmemory () ;
 void printsegmenttable() ;
 void printsegmentdescriptor ( Segment_t * descriptor );
+void printnewmemory ( Segment_t * descriptor, int newsize );
+
 
 
 

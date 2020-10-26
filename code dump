@@ -65,3 +65,13 @@
   printf ( "mymalloc> start\n");
    printf ("plain size %lu\n size of %lu\n", size, sizeof(size));
    printf ("plain mymemory %u\n size of %lu\n", *mymemory, sizeof(mymemory));
+
+
+     //rewrites blank memory
+  for(int i=0; i<size; ++i)
+  {
+    segmenttable->allocated = 0;
+    segmenttable->start = &mymemory + size;
+    segmenttable->size = sizeof(mymemory) - size;
+  }
+  *newpointer = &memory + size;

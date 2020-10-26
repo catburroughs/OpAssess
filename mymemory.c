@@ -12,6 +12,8 @@
 
 // our memory
 Byte        mymemory [MAXMEM] ;
+Segment_t * segmenttable = NULL;
+int newmem = MAXMEM;
 
 int segmentCounter = 0;
 int sizecount = 0;
@@ -25,7 +27,7 @@ struct segmentdescriptor segment_default = {
 
 
 
-struct segmentdescriptor * segmenttable = &segment_default;
+//struct segmentdescriptor * segmenttable = &segment_default;
 
 void initialize ()
 
@@ -37,12 +39,8 @@ void initialize ()
     mymemory[i] = '\0';
 
   } 
-  segmenttable->allocated = 0;
-  segmenttable->start = &mymemory;
-  segmenttable->size = MAXMEM;
+  struct segmentdescriptor segment_default = {0, &mymemory, MAXMEM, NULL};
   printsegmentdescriptor(&segment_default);
-  
- 
   segmentCounter++;
 
 }
@@ -52,7 +50,10 @@ void initialize ()
 /*   void printsegmenttable()
   {
     char alloString [10];
-    if( segmenttable->allocated == 0)
+    printf("here");
+    for (size_t x=0; x<sizeof(segmentdescriptor); x++)
+    {
+      if( segmentdescriptor[x].allocated == 0)
     {
       strcpy(alloString,"False");
       }
@@ -60,9 +61,10 @@ void initialize ()
       {
         strcpy(alloString,"True");
         }
-        printf("\n Segment 0 \n  allocated = %s \n  start = %p \n  size = %lu \n", alloString , segmenttable -> start, segmenttable -> size);
-  }
- */
+      printf("\n Segment 0 \n  allocated = %s \n  start = %p \n  size = %lu \n", alloString , segmentdescriptor[x].start, segmentdescriptor[x].size); 
+      }
+  } */
+
  
  void printmemory ()
  {
@@ -79,49 +81,63 @@ void initialize ()
 
  void * mymalloc ( size_t size )
 {
-  //printf("here");
   int memcounter = 0;
   int i = 0;
-  //printf("size = %lu",size);
-  while ( i < size)
+  Segment_t *tempNode;
+  //checks size and writes the memory
+  if (newmem < size)
   {
-    //printf("\ni = %d \n", i);
+    printf("\nNot enough memory left\n");
+    //return 0;
+  }
+  else {
+    while ( i < size)
+  {
     if (mymemory[memcounter] == '\0')
     {
       mymemory[memcounter] = '1';
       i++;
       memcounter++;   
-      } 
+      }
       else
       {
         memcounter++;
       } 
    }
+//creates written segment
 
-
-   for(int i=0; i<size; ++i)
+  if (segmenttable == NULL)
   {
-    segmenttable->allocated = 0;
-    segmenttable->start = &size;
-    segmenttable->size = sizeof(mymemory) - size;
-  }
-  printsegmentdescriptor(&segment_default);
-
-  struct segmentdescriptor segment_new = {
+    struct segmentdescriptor segment_new = {
   .allocated = 1,
-  .start = &segmenttable,
+  .start = &size,
   .size = size,
   .next = NULL
-  };
+    };
+  tempNode = &segment_new;
+  ;
+    struct segmentdescriptor * segmenttable = &segment_new;
+    printsegmentdescriptor(&segment_new);
 
-  struct segmentdescriptor * segmenttable = &segment_new;
-  printf("\nsegment table size = %lu\n",sizeof(segmenttable));
-  segmentCounter++;
-  printsegmentdescriptor(&segment_new);
-  printf("segment counter= %d", segmentCounter);
-  return &mymemory[size];
-   // implement the mymalloc functionality
   }
+  else
+  {
+    struct segmentdescriptor segment_new = {1, &size, size, tempNode};
+  printsegmentdescriptor(&segment_new);
+  }
+  segmentCounter++;
+  newmem = newmem - size;
+  printnewmemory (&segment_default, newmem);
+
+  //printf("segment counter= %d", segmentCounter);
+  segmentCounter++;
+
+  }
+  return &mymemory[size];
+  
+}
+
+  
 
 void printsegmentdescriptor ( Segment_t * descriptor )
 {
@@ -154,16 +170,33 @@ void printsegmentdescriptor ( Segment_t * descriptor )
 
   // printf ( "initialize> end\n");
 
-
-int myfree ( void * ptr )
+  void printnewmemory ( Segment_t * descriptor, int newsize )
 {
-  for(int i=0; i<=MAXMEM; ++i)
-  {  
-    if (mymemory[i] == '\0')
-    sizecount++;
-  } 
-return sizecount;
+  descriptor->size = newsize;
+  printf ("Segment %d\n", segmentCounter);
+  printf ( "\tallocated = %s\n" , (descriptor->allocated == FALSE ? "FALSE" : "TRUE" ) ) ;
+  printf ( "\tstart     = %p\n" , descriptor->start ) ;
+  printf ( "\tsize      = %lu\n", descriptor->size  ) ;
 }
+
+//need to delete unwanted segments
+/* void myfree ( Segment_t * ptr )
+{
+  int delsize = 0;
+  int i = 0;
+  size
+  ptr->size = delsize;
+  &ptr->start = delstart;
+  while (i < delsize) 
+  {
+    if (&ptr->start != FALSE)
+      {
+        mymemory[i] = '\0';
+        i++;
+        } 
+    }
+} */
+
 
 
 
