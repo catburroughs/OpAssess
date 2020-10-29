@@ -33,12 +33,13 @@ typedef struct segmentdescriptor {
 
 extern Segment_t * segmenttable;
 
+extern struct segmentdescriptor segmentlist[MAXSEGMENTS];
 
 // forward references, user interface
 void        initialize () ;
 void      * mymalloc   ( size_t  ) ;
 void        myfree     ( Segment_t *  ) ;
-void        mydefrag   ( void ** ) ;
+//void        mydefrag   ( void ** ) ;
 
 // forward references, managing segmentation table
 Segment_t * findFree    ( Segment_t * list, size_t size ) ;
@@ -48,7 +49,7 @@ void        insertAfter ( Segment_t *, Segment_t * ) ;
 int isPrintable ( int c ) ;
 void printmemory () ;
 void printsegmenttable() ;
-void printsegmentdescriptor ( Segment_t * descriptor );
+void printsegmentdescriptor ( int index );
 void printnewmemory ( Segment_t * descriptor, int newsize );
 
 

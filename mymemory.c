@@ -12,13 +12,14 @@
 
 // our memory
 Byte  mymemory [MAXMEM] ;
+struct segmentdescriptor segmentlist[MAXSEGMENTS];
 //Segment_t * segmenttable = NULL;
 int newmem = MAXMEM;
 
 int segmentCounter = 0;
 int sizecount = 0;
 
-struct segmentdescriptor segmentlist[MAXSEGMENTS];
+
 
 
 /*  struct segmentdescriptor = {
@@ -42,11 +43,16 @@ void initialize ()
     mymemory[i] = '\0';
 
   } 
-  struct segmentdescriptor segmentlist[MAXSEGMENTS];
+  //struct segmentdescriptor segmentlist[MAXSEGMENTS];
+  segmentlist->allocated = 0,
+  segmentlist->start = &mymemory,
+  segmentlist->size = MAXMEM,
+  segmentlist->next = NULL
+ /*  struct segmentdescriptor segmentlist[MAXSEGMENTS];
   segmentlist[0].allocated = 0,
   segmentlist[0].start = &mymemory,
   segmentlist[0].size = MAXMEM,
-  segmentlist[0].next = NULL
+  segmentlist[0].next = NULL */
   ;
   
   //Segment_t * segmenttable = &segment_default;
@@ -54,7 +60,7 @@ void initialize ()
 
 
 
-  printsegmentdescriptor(segmentlist);
+  printsegmentdescriptor(0);
   //segmentCounter++;
   
   
@@ -126,7 +132,10 @@ void initialize ()
 Segment_t *teststart = findFree(&segmentlist[0], size);
 
 printf("\n teststart = winning  \n"); 
+printf("\nmymemory pointer =  %p \n", &mymemory);
+printf("\n %p \n", segmentlist[0].start);
 
+//working new section
    /* if (segmenttable == NULL)
   {
     struct segmentdescriptor segment_new = {
@@ -148,7 +157,7 @@ printf("\n teststart = winning  \n");
   }
   segmentCounter++;
   newmem = newmem - size; 
-   printnewmemory (segmentlist, newmem);
+  printnewmemory (segmentlist, newmem);
 
   //printf("segment counter= %d", segmentCounter);
   segmentCounter++;
@@ -160,12 +169,12 @@ printf("\n teststart = winning  \n");
 
   
  
-void printsegmentdescriptor ( Segment_t * descriptor )
+void printsegmentdescriptor (int index )
 {
       printf ("Segment %d\n", segmentCounter);
-      printf ( "\tallocated = %s\n" , (descriptor->allocated == FALSE ? "FALSE" : "TRUE" ) ) ;
-      printf ( "\tstart     = %p\n" , descriptor->start ) ;
-      printf ( "\tsize      = %lu\n", descriptor->size  ) ;
+      printf ( "\tallocated = %s\n" , (segmentlist[index].allocated == FALSE ? "FALSE" : "TRUE" ) ) ;
+      printf ( "\tstart     = %p\n" , segmentlist[index].start ) ;
+      printf ( "\tsize      = %lu\n", segmentlist[index].size  ) ;
 }
  
 
@@ -227,11 +236,11 @@ void printsegmentdescriptor ( Segment_t * descriptor )
 
 }  */
 
-void mydefrag ( void ** ptrlist)
+/* void mydefrag ( void ** ptrlist)
 {
    printf ( "mydefrag> start\n");
 
-}
+} */
 
 
 // helper functions for management segmentation table
@@ -246,33 +255,33 @@ void insertAfter ( Segment_t * oldSegment, Segment_t * newSegment )
 {
 }
 
-Segment_t * findFree ( Segment_t * list, size_t  size) 
+Segment_t * findFree ( Segment_t * descriptor, size_t  size) 
 {
-  if(list[0].allocated == 0)
+  if(descriptor[0].allocated == 0)
 {
   printf("True");
-  printf("%s",list[0].start);
-  if(list->size<=size)
+  printf("%p", descriptor->start);
+  if(descriptor->size<=size)
   {
     printf("True2");
-    return list[0].start;
+    return descriptor->start;
   }
 }
   
 else
 {
-  for(int i=0;i<sizeof(list);i++)
+  for(int i=0;i<sizeof(descriptor);i++)
   {
-    if(list->allocated == 1)
+    if(descriptor->allocated == 1)
   {
     printf("False");
 
-    list = list->next;
-    if(list->allocated == 0)
+    descriptor = descriptor->next;
+    if(descriptor->allocated == 0)
     {
-      if(list->size<=size)
+      if(descriptor->size<=size)
       {
-    return list->start;
+    return descriptor->start;
     }
   
   }
@@ -283,7 +292,7 @@ else
   }
 }
 }
-return list->start;
+return descriptor->start;
 }
 
 
