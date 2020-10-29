@@ -7,13 +7,13 @@ int main()
   printf ( "shell> start\n");
   initialize() ;
   //printsegmenttable();
-  //printmemory() ;
+  printmemory() ;
 
 //printsegmentdescriptor();
   char * ptr1 = (char *) mymalloc (10) ;
   strcpy (ptr1, "this test");
-  printf( "\nshell> content of allocated memory: %s\n", ptr1 ) ;
-  //printf("%p\n", &ptr1);
+  printf( "\nshell> content of allocated memory: %s\n", ptr1 ) ; 
+  printf("%p\n", &ptr1);
   //int x = myfree(mymemory);
 
   char * ptr2 = (char *) mymalloc (15) ;

@@ -41,7 +41,7 @@ void        myfree     ( Segment_t *  ) ;
 void        mydefrag   ( void ** ) ;
 
 // forward references, managing segmentation table
-Segment_t * findFree    ( Segment_t *, size_t      ) ;
+Segment_t * findFree    ( Segment_t * list, size_t size ) ;
 void        insertAfter ( Segment_t *, Segment_t * ) ;
 
 // forward references, helper functions

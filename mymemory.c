@@ -11,23 +11,26 @@
 
 
 // our memory
-Byte        mymemory [MAXMEM] ;
-Segment_t * segmenttable = NULL;
+Byte  mymemory [MAXMEM] ;
+//Segment_t * segmenttable = NULL;
 int newmem = MAXMEM;
 
 int segmentCounter = 0;
 int sizecount = 0;
 
-struct segmentdescriptor segment_default = {
+struct segmentdescriptor segmentlist[MAXSEGMENTS];
+
+
+/*  struct segmentdescriptor = {
   .allocated = 0,
   .start = &mymemory,
   .size = MAXMEM,
-  .next = NULL
-};
+  .next = NULL */ 
 
 
 
-//struct segmentdescriptor * segmenttable = &segment_default;
+
+
 
 void initialize ()
 
@@ -39,15 +42,27 @@ void initialize ()
     mymemory[i] = '\0';
 
   } 
-  struct segmentdescriptor segment_default = {0, &mymemory, MAXMEM, NULL};
-  printsegmentdescriptor(&segment_default);
-  segmentCounter++;
+  struct segmentdescriptor segmentlist[MAXSEGMENTS];
+  segmentlist[0].allocated = 0,
+  segmentlist[0].start = &mymemory,
+  segmentlist[0].size = MAXMEM,
+  segmentlist[0].next = NULL
+  ;
+  
+  //Segment_t * segmenttable = &segment_default;
+  //Segment_t ** seglist =  &segmenttable;
 
+
+
+  printsegmentdescriptor(segmentlist);
+  //segmentCounter++;
+  
+  
 }
 
 
 
-/*   void printsegmenttable()
+  /* void printsegmenttable()
   {
     char alloString [10];
     printf("here");
@@ -68,18 +83,21 @@ void initialize ()
  
  void printmemory ()
  {
-   for (int i = 0; i < MAXSEGMENTS; i++)
-  {
-    printf("\n Segment %d ] ",i * 10);
-    for (int j = 0; j< MAXMEM/MAXSEGMENTS; j++)
-    {
-      printf("%02x ", mymemory[i]);
+   for (int j = 0; j < MAXMEM/8; j++)
+   {
+     printf("Segment %d ", j * 8);
+
+     for (int m = 0; m < 8; m++)
+     {
+      printf("%02x ", mymemory[m]);
     }
+
       printf("\n");
   }
  }
 
- void * mymalloc ( size_t size )
+
+  void * mymalloc ( size_t size )
 {
   int memcounter = 0;
   int i = 0;
@@ -103,10 +121,13 @@ void initialize ()
       {
         memcounter++;
       } 
-   }
+   } 
 //creates written segment
+Segment_t *teststart = findFree(&segmentlist[0], size);
 
-  if (segmenttable == NULL)
+printf("\n teststart = winning  \n"); 
+
+   /* if (segmenttable == NULL)
   {
     struct segmentdescriptor segment_new = {
   .allocated = 1,
@@ -116,29 +137,29 @@ void initialize ()
     };
   tempNode = &segment_new;
   ;
-    struct segmentdescriptor * segmenttable = &segment_new;
+    //struct segmentdescriptor * segmenttable = &segment_new;
     printsegmentdescriptor(&segment_new);
 
   }
   else
   {
-    struct segmentdescriptor segment_new = {1, &size, size, tempNode};
-  printsegmentdescriptor(&segment_new);
+    struct segmentdescriptor segment_new = {1, &size, size, tempNode}; */
+  //printsegmentdescriptor(&segment_new);
   }
   segmentCounter++;
-  newmem = newmem - size;
-  printnewmemory (&segment_default, newmem);
+  newmem = newmem - size; 
+   printnewmemory (segmentlist, newmem);
 
   //printf("segment counter= %d", segmentCounter);
   segmentCounter++;
 
-  }
+  
   return &mymemory[size];
   
-}
+} 
 
   
-
+ 
 void printsegmentdescriptor ( Segment_t * descriptor )
 {
       printf ("Segment %d\n", segmentCounter);
@@ -146,7 +167,7 @@ void printsegmentdescriptor ( Segment_t * descriptor )
       printf ( "\tstart     = %p\n" , descriptor->start ) ;
       printf ( "\tsize      = %lu\n", descriptor->size  ) ;
 }
-
+ 
 
 
 
@@ -177,7 +198,7 @@ void printsegmentdescriptor ( Segment_t * descriptor )
   printf ( "\tallocated = %s\n" , (descriptor->allocated == FALSE ? "FALSE" : "TRUE" ) ) ;
   printf ( "\tstart     = %p\n" , descriptor->start ) ;
   printf ( "\tsize      = %lu\n", descriptor->size  ) ;
-}
+} 
 
 //need to delete unwanted segments
 /* void myfree ( Segment_t * ptr )
@@ -225,17 +246,54 @@ void insertAfter ( Segment_t * oldSegment, Segment_t * newSegment )
 {
 }
 
-/* Segment_t * findSegment ( Segment_t * list, void * ptr )
+Segment_t * findFree ( Segment_t * list, size_t  size) 
 {
-} */
-
-int isPrintable ( int c )
+  if(list[0].allocated == 0)
 {
-   if ( c >= 0x20 && c <= 0x7e ) return c ;
+  printf("True");
+  printf("%s",list[0].start);
+  if(list->size<=size)
+  {
+    printf("True2");
+    return list[0].start;
+  }
+}
+  
+else
+{
+  for(int i=0;i<sizeof(list);i++)
+  {
+    if(list->allocated == 1)
+  {
+    printf("False");
 
-   return 0 ;
+    list = list->next;
+    if(list->allocated == 0)
+    {
+      if(list->size<=size)
+      {
+    return list->start;
+    }
+  
+  }
+  else
+  {
+  printf("list full");
+  }
+  }
+}
+}
+return list->start;
 }
 
 
 
+int isPrintable ( int c )
+{
+  if ( c >= 0x20 && c <= 0x7e )
+    {
+      return c ;
+}
+return 0;
+}
 
