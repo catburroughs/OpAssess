@@ -120,25 +120,29 @@ void initialize ()
   }
   else {
     printf("\nsize = %lu\n",size);
-    for (int memcounter = 0; memcounter <= size; memcounter++)
+    int c = 0;
+    while (memcounter <= size)
   {
-    if (mymemory[memcounter] == '\0')
+    if (mymemory[c] == '\0')
     {
       //teststart = 1; //place value at pointer
-      mymemory[memcounter] = 1;
-      //memcounter++; 
+      memcpy(mymemory, &size, sizeof(mymemory));
+      //mymemory[memcounter] = 1;
+      memcounter++; 
+      c++;
       //printf("\nteststart = null\n");  
       }
-      //else
+      else
+      c++;
      // {
         //memcounter++;
      // }
      
    } 
 //creates written segment
-char * newerpointer = malloc(size);
-printf("newer pointer = %p",newerpointer); 
-printf("\n %p \n", segmentlist[0].start);
+//char * newerpointer = malloc(size);
+//printf("newer pointer = %p",newerpointer); 
+//printf("\n %p \n", segmentlist[0].start);
 
 //working new section
   if (segmentlist->allocated == 0)
