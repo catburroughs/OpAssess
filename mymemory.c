@@ -89,13 +89,15 @@ void initialize ()
  
  void printmemory ()
  {
+   int x;
    for (int j = 0; j < MAXMEM/8; j++)
    {
-     printf("Segment %d ", j * 8);
+     printf("| %d |", j * 8);
 
      for (int m = 0; m < 8; m++)
      {
-      printf("%02x ", mymemory[m]);
+      x = isPrintable(mymemory[j]);
+      printf("%02x ", x);
     }
 
       printf("\n");
@@ -105,8 +107,10 @@ void initialize ()
 
   void * mymalloc ( size_t size )
 {
+  Segment_t *teststart = findFree(&segmentlist[0], size);
+  printf("\nmymemory pointer =  %p \n", &mymemory);
   int memcounter = 0;
-  int i = 0;
+  //int i = 0;
   Segment_t *tempNode;
   //checks size and writes the memory
   if (newmem < size)
@@ -115,46 +119,46 @@ void initialize ()
     //return 0;
   }
   else {
-    while ( i < size)
+    printf("\nsize = %lu\n",size);
+    for (int memcounter = 0; memcounter <= size; memcounter++)
   {
     if (mymemory[memcounter] == '\0')
     {
-      mymemory[memcounter] = '1';
-      i++;
-      memcounter++;   
+      //teststart = 1; //place value at pointer
+      mymemory[memcounter] = 1;
+      //memcounter++; 
+      //printf("\nteststart = null\n");  
       }
-      else
-      {
-        memcounter++;
-      } 
+      //else
+     // {
+        //memcounter++;
+     // }
+     
    } 
 //creates written segment
-Segment_t *teststart = findFree(&segmentlist[0], size);
-
-printf("\n teststart = winning  \n"); 
-printf("\nmymemory pointer =  %p \n", &mymemory);
+char * newerpointer = malloc(size);
+printf("newer pointer = %p",newerpointer); 
 printf("\n %p \n", segmentlist[0].start);
 
 //working new section
-   /* if (segmenttable == NULL)
+  if (segmentlist->allocated == 0)
   {
-    struct segmentdescriptor segment_new = {
-  .allocated = 1,
-  .start = &size,
-  .size = size,
-  .next = NULL
+  segmentlist->allocated = 1,
+  segmentlist->start = teststart,
+  segmentlist->size = size,
+  segmentlist->next = NULL;
     };
-  tempNode = &segment_new;
+  //tempNode = &segment_new;
   ;
     //struct segmentdescriptor * segmenttable = &segment_new;
-    printsegmentdescriptor(&segment_new);
+  printsegmentdescriptor(0);
 
   }
-  else
+  /* else
   {
-    struct segmentdescriptor segment_new = {1, &size, size, tempNode}; */
-  //printsegmentdescriptor(&segment_new);
-  }
+    struct segmentdescriptor segment_new = {1, &size, size, tempNode}; 
+  //printsegmentdescriptor(&segment_new); 
+  } */
   segmentCounter++;
   newmem = newmem - size; 
   printnewmemory (segmentlist, newmem);
@@ -261,13 +265,12 @@ Segment_t * findFree ( Segment_t * descriptor, size_t  size)
 {
   printf("True");
   printf("%p", descriptor->start);
-  if(descriptor->size<=size)
+  if(descriptor[0].size >= size)
   {
-    printf("True2");
-    return descriptor->start;
+    printf("\nTrue2\n");
   }
-}
-  
+  return descriptor->start;
+} 
 else
 {
   for(int i=0;i<sizeof(descriptor);i++)
@@ -275,8 +278,13 @@ else
     if(descriptor->allocated == 1)
   {
     printf("False");
+  }
+  }
+}
+return NULL;
+}
 
-    descriptor = descriptor->next;
+    /* descriptor = descriptor->next;
     if(descriptor->allocated == 0)
     {
       if(descriptor->size<=size)
@@ -290,10 +298,10 @@ else
   printf("list full");
   }
   }
-}
-}
-return descriptor->start;
-}
+  }
+} */
+//return descriptor->start;
+
 
 
 
