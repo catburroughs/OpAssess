@@ -33,7 +33,7 @@ typedef struct segmentdescriptor {
 
 extern Segment_t * segmenttable;
 
-extern struct segmentdescriptor segmentlist[MAXSEGMENTS];
+//extern struct segmentdescriptor segmentlist[MAXSEGMENTS];
 
 // forward references, user interface
 void        initialize () ;
@@ -49,7 +49,7 @@ void        insertAfter ( Segment_t *, Segment_t * ) ;
 int isPrintable ( int c ) ;
 void printmemory () ;
 void printsegmenttable() ;
-void printsegmentdescriptor ( int index );
+void printsegmentdescriptor ();
 void printnewmemory ( Segment_t * descriptor, int newsize );
 
 

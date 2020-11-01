@@ -13,15 +13,18 @@ int main()
   char * ptr1 = (char *) mymalloc (10) ;
   strcpy (ptr1, "this test");
   printf( "\nshell> content of allocated memory: %s\n", ptr1 ) ; 
-  printf("%p\n", &ptr1);
+  printf("%s\n", ptr1);
   //int x = myfree(mymemory);
-
+  //printsegmenttable();
+  //printf("herehere");
   char * ptr2 = (char *) mymalloc (15) ;
   strcpy (ptr2, "this test");
   printf( "\nshell> content of allocated memory: %s\n", ptr2 ) ; 
+  printf("%s\n", ptr2);
 
-  printmemory() ;
-  //printsegmenttable();
+
+  //printmemory() ;
+  printsegmenttable();
 
   printf ( "\nshell> end\n");
   return 0;
